@@ -3,6 +3,7 @@
 
 ```json
 {
+  "background": "背景图片路径或者链接"
   "name": "名字",
   "avatar": "favicon.png",
   "description": "一条没有梦想的咸鱼",

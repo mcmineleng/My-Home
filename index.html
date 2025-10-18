@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人主页</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-attachment: fixed; 
+            background-color: #f0f0f0; /* 默认背景色 */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: #fff;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            transition: background-image 0.5s ease;
+        }
+        
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: -1;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            padding: 25px;
+            margin-bottom: 25px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+        }
+        
+        .profile-section {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .profile-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .avatar-container {
+            margin-right: 20px;
+            flex-shrink: 0;
+        }
+        
+        .avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 20px;
+            object-fit: cover;
+            border: 3px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.2);
+        }
+        
+        .name-title h1 {
+            font-size: 2.2rem;
+            margin-bottom: 5px;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        
+        .bio {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .tag {
+            background: rgba(255, 255, 255, 0.25);
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            color: #fff;
+            backdrop-filter: blur(10px);
+        }
+        
+        .contact-section, .content-section {
+            margin-bottom: 30px;
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-title i {
+            margin-right: 10px;
+            font-size: 1.3rem;
+        }
+        
+        .link-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .link-item {
+            display: flex;
+            align-items: center;
+            padding: 18px;
+            margin-bottom: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        .link-list .link-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .link-item:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(5px);
+        }
+        
+        .link-icon {
+            width: 44px;
+            height: 44px;
+            margin-right: 15px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.2);
+            font-size: 1.3rem;
+            flex-shrink: 0;
+        }
+        
+        .link-icon img {
+            width: 24px;
+            height: 24px;
+            object-fit: contain;
+        }
+        
+        .link-content {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .link-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+            font-size: 1.1rem;
+            line-height: 1.3;
+        }
+        
+        .link-desc {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.4;
+        }
+        
+        .link-arrow {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.2rem;
+            flex-shrink: 0;
+            margin-left: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            .profile-header {
+                flex-direction: row;
+                align-items: center;
+            }
+            
+            .avatar-container {
+                margin-right: 15px;
+                margin-bottom: 0;
+            }
+            
+            .avatar {
+                width: 80px;
+                height: 80px;
+            }
+            
+            .name-title h1 {
+                font-size: 1.8rem;
+            }
+            
+            .link-item {
+                padding: 15px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            body {
+                padding: 15px 10px;
+            }
+            
+            .glass-card {
+                padding: 20px;
+            }
+            
+            .link-item {
+                padding: 12px;
+            }
+            
+            .link-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 1.1rem;
+                margin-right: 12px;
+            }
+            
+            .avatar {
+                width: 70px;
+                height: 70px;
+            }
+            
+            .name-title h1 {
+                font-size: 1.6rem;
+            }
+        }
+        
+        a, button, .link-item {
+            -webkit-tap-highlight-color: transparent;
+            outline: none;
+        }
+        
+        a:focus, button:focus, .link-item:focus {
+            outline: none;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 30px 0 20px;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .error-message {
+            background: rgba(255, 0, 0, 0.1);
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="app-content"></div>
+        
+        <footer>
+            <p id="footer-text"></p>
+        </footer>
+    </div>
+
+    <script>
+        // 图标映射
+        const iconMap = {
+            '$email': 'fas fa-envelope',
+            '$call': 'fas fa-phone',
+            '$qq': 'fab fa-qq',
+            '$weibo': 'fab fa-weibo',
+            '$notice': 'fas fa-bell',
+            '$mobile': 'fas fa-mobile-alt',
+            '$wechat': 'fab fa-weixin',
+            '$blog': 'fas fa-blog',
+            '$bbs': 'fas fa-users',
+            '$github': 'fab fa-github',
+            '$codepen': 'fab fa-codepen',
+            '$globe': 'fas fa-globe',
+            '$briefcase': 'fas fa-briefcase',
+            '$book': 'fas fa-book',
+            '$handshake': 'fas fa-handshake'
+        };
+
+        // 获取图标
+        function getIcon(iconValue) {
+            return iconMap[iconValue] || '';
+        }
+
+        // 渲染图标
+        function renderIcon(iconValue) {
+            const faIcon = getIcon(iconValue);
+            
+            if (faIcon) {
+                return `<i class="${faIcon}"></i>`;
+            } else {
+                return `<img src="${iconValue}" alt="图标">`;
+            }
+        }
+
+        // 设置背景图片
+        function setBackground(backgroundValue) {
+            if (!backgroundValue) {
+                // 如果没有背景字段或为空，使用默认背景
+                document.body.style.backgroundImage = '';
+                return;
+            }
+            
+            // 预加载图片，检查是否有效
+            const img = new Image();
+            img.onload = function() {
+                // 图片加载成功，设置背景
+                document.body.style.backgroundImage = `url('${backgroundValue}')`;
+            };
+            img.onerror = function() {
+                // 图片加载失败，不设置背景
+                document.body.style.backgroundImage = '';
+                console.warn('背景图片加载失败:', backgroundValue);
+            };
+            img.src = backgroundValue;
+        }
+
+        // 渲染页面内容
+        function renderPage(data) {
+            const appContent = document.getElementById('app-content');
+            const footerText = document.getElementById('footer-text');
+            
+            // 设置页面标题
+            document.title = `${data.name} - 个人主页`;
+            
+            // 设置favicon
+            const favicon = document.createElement('link');
+            favicon.rel = 'icon';
+            favicon.href = data.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1160&q=80';
+            document.head.appendChild(favicon);
+            
+            // 设置背景图片
+            setBackground(data.background);
+            
+            // 生成HTML内容
+            appContent.innerHTML = `
+                <!-- 个人信息区域 -->
+                <div class="glass-card profile-section">
+                    <div class="profile-header">
+                        <div class="avatar-container">
+                            <img src="${data.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1160&q=80'}" alt="头像" class="avatar">
+                        </div>
+                        <div class="name-title">
+                            <h1>${data.name || '姓名'}</h1>
+                        </div>
+                    </div>
+                    <p class="bio">${data.description || '个人描述'}</p>
+                    <div class="tags">
+                        ${(data.tag && Array.isArray(data.tag) ? data.tag.map(tag => `<span class="tag">${tag}</span>`).join('') : '')}
+                    </div>
+                </div>
+                
+                <!-- 联系方式区域 -->
+                ${data.contact && Array.isArray(data.contact) && data.contact.length > 0 ? `
+                <div class="contact-section">
+                    <h2 class="section-title"><i class="fas fa-address-book"></i> 联系方式</h2>
+                    <div class="glass-card">
+                        <ul class="link-list">
+                            ${data.contact.map(contact => `
+                            <a href="${contact.url || '#'}" class="link-item">
+                                <div class="link-icon">
+                                    ${renderIcon(contact.icon || '$email')}
+                                </div>
+                                <div class="link-content">
+                                    <div class="link-title">${contact.title || '标题'}</div>
+                                    <div class="link-desc">${contact.text || '描述'}</div>
+                                </div>
+                                <div class="link-arrow">
+                                    <i class="fas fa-chevron-right"></i>
+                                </div>
+                            </a>
+                            `).join('')}
+                        </ul>
+                    </div>
+                </div>
+                ` : ''}
+                
+                <!-- 个人网站区域 -->
+                ${data.myweb && Array.isArray(data.myweb) && data.myweb.length > 0 ? `
+                <div class="content-section">
+                    <h2 class="section-title"><i class="fas fa-globe"></i> 个人网站</h2>
+                    <div class="glass-card">
+                        <ul class="link-list">
+                            ${data.myweb.map(website => `
+                            <a href="${website.url || '#'}" target="_blank" class="link-item">
+                                <div class="link-icon">
+                                    ${renderIcon(website.icon || '$blog')}
+                                </div>
+                                <div class="link-content">
+                                    <div class="link-title">${website.title || '网站标题'}</div>
+                                    <div class="link-desc">${website.text || '网站描述'}</div>
+                                </div>
+                                <div class="link-arrow">
+                                    <i class="fas fa-chevron-right"></i>
+                                </div>
+                            </a>
+                            `).join('')}
+                        </ul>
+                    </div>
+                </div>
+                ` : ''}
+                
+                <!-- 友情链接区域 -->
+                ${data.friendlink && Array.isArray(data.friendlink) && data.friendlink.length > 0 ? `
+                <div class="content-section">
+                    <h2 class="section-title"><i class="fas fa-handshake"></i> 友情链接</h2>
+                    <div class="glass-card">
+                        <ul class="link-list">
+                            ${data.friendlink.map(friend => `
+                            <a href="${friend.url || '#'}" target="_blank" class="link-item">
+                                <div class="link-icon">
+                                    ${renderIcon(friend.icon || '$handshake')}
+                                </div>
+                                <div class="link-content">
+                                    <div class="link-title">${friend.title || '友情链接'}</div>
+                                    <div class="link-desc">${friend.text || '链接描述'}</div>
+                                </div>
+                                <div class="link-arrow">
+                                    <i class="fas fa-chevron-right"></i>
+                                </div>
+                            </a>
+                            `).join('')}
+                        </ul>
+                    </div>
+                </div>
+                ` : ''}
+            `;
+            
+            // 设置页脚
+            const now = new Date();
+            footerText.innerHTML = `© ${now.getFullYear()} ${data.name || '个人'}的主页 | 最后更新: ${now.getFullYear()}年${(now.getMonth()+1).toString().padStart(2, '0')}月${now.getDate().toString().padStart(2, '0')}日`;
+            
+            // 添加交互效果
+            addInteractions();
+        }
+
+        // 显示错误信息
+        function showError(message) {
+            const appContent = document.getElementById('app-content');
+            appContent.innerHTML = `
+                <div class="error-message">
+                    <h3>错误：无法读取数据文件</h3>
+                    <p>${message}</p>
+                </div>
+            `;
+            
+            // 设置页脚
+            const now = new Date();
+            const footerText = document.getElementById('footer-text');
+            footerText.innerHTML = `© ${now.getFullYear()} 个人主页 | 最后更新: ${now.getFullYear()}年${(now.getMonth()+1).toString().padStart(2, '0')}月${now.getDate().toString().padStart(2, '0')}日`;
+        }
+
+        // 添加交互效果
+        function addInteractions() {
+            // 链接点击效果
+            document.querySelectorAll('.link-item').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    this.style.transform = 'scale(0.98)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 150);
+                });
+            });
+            
+            // 确保外部链接在新标签页打开
+            document.querySelectorAll('a[href^="http"]').forEach(link => {
+                if (!link.getAttribute('target') && !link.href.includes(window.location.hostname)) {
+                    link.setAttribute('target', '_blank');
+                }
+            });
+        }
+
+        // 加载数据并渲染页面
+        function loadData() {
+            // 从外部JSON文件加载数据
+            fetch('./data/data.json')
+                。then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP错误! 状态: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                。then(data => {
+                    renderPage(data);
+                })
+                。catch(error => {
+                    console.error('加载数据失败:', error);
+                    showError('无法读取数据文件，请检查 data/data.json 文件是否存在且格式正确。');
+                });
+        }
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            loadData();
+        });
+    </script>
+</body>
+</html>

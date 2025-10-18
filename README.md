@@ -45,3 +45,22 @@
   ]
 }
 ```
+
+所有可以用的图标变量
+```
+$email     电子邮箱
+$call      电话
+$qq        QQ
+$weibo     微博
+$notice    公告(铃铛)
+$mobile    手机
+$wechat    微信
+$blog      博客
+$bbs       论坛
+$github    Github开源社区
+$codepen   CodePen在线编辑器
+$globe     浏览器图标
+$briefcase 手提包图标
+$book      书本图标
+$handshake 握手图标
+```

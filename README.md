@@ -1,4 +1,5 @@
 # My-Home
+请访问[演示网站](https://home.mcleng.cn)查看主页部署后的效果
 请编辑data/data.json修改信息，以后的版本会出图形化编辑
 
 ```json
